@@ -1,0 +1,84 @@
+<div class="container border border-light shadow p-3 mb-5 bg-white rounded">
+    <form class="">
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <input name="nombreFiltro" [(ngModel)]="nombreFiltro" type="text" class="form-control" id="buscar" placeholder="Buscar por nombre">
+                </div>
+                <div class="col">
+                    <select class="form-control" id="fabricante"  (change)="filtrarProductos()">
+                      <option value="" disabled selected>Selecciona el fabricante</option>
+                      <option *ngFor="let producto of productos" [value]="producto.fabricante">{{producto.fabricante}}</option>
+                    </select>
+                  </div>
+                  
+            </div>
+        </div>
+    </form>
+    <div class="container d-flex  mt-2">
+        <!-- Llama al método filtrarProductos al hacer clic en el botón "Filtrar" -->
+        <button (click)="filtrarProductos()" class="btn btn-success" style="margin-left:10px" >
+          Filtrar
+        </button>
+        <!-- Llama al método limpiarFiltros al hacer clic en el botón "Limpiar Filtros" -->
+        <button (click)="limpiarFiltros()" class="btn btn-danger" style="margin-left:10px">
+          Limpiar Filtros
+        </button>
+    </div><br>
+</div>
+
+<div class="container border border-light shadow p-3 mb-5 bg-white rounded">
+    <div class="card">
+        <div class="card-header">
+            <h3>Productos</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>CODIGO</th>
+                        <th>IMAGEN</th>
+                        <th>MODELO</th>
+                        <th>PRODUCTO</th>
+                        <th>FABRICANTE</th>
+                        <th>ESTADO</th>
+                        <th>STOCK</th>
+                        <th>PRECIO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Utiliza productosFiltrados en lugar de productos -->
+                    <tr *ngFor="let producto of productosFiltrados | paginate:{itemsPerPage: cant_pag, currentPage: pag_act}">
+                        <td>{{producto.idProducto}}</td>
+                        <td class="text-center">
+                            <img [src]="'assets/img/'+producto.imagen+'.png'" width="75">
+                        </td>
+                        <td>{{producto.modelo}}</td>
+                        <td>{{producto.descripcion}}</td>
+                        <td>{{producto.fabricante}}</td>
+                        <td>
+                            <div *ngIf="producto.estado === '1' ; else inactive">
+                                <div class="text-center container border p-1 bg-success text-white">
+                                    ACTIVO
+                                </div>
+                            </div>
+                            <ng-template #inactive>
+                                <div class="text-center container border p-1 bg-danger text-white">
+                                    INACTIVO
+                                </div>
+                            </ng-template>
+                        </td>
+                        <td>{{producto.stock}}</td>
+                        <td>{{producto.precioUnidad}}</td>
+                        <td>
+                            <button (click)="Editar(producto)" class="btn btn-warning">Editar</button>
+                            <button (click)="Delete(producto)" class="btn btn-danger">Suprimir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <pagination-controls (pageChange)="pag_act=$event"></pagination-controls>
+    </div>
+</div>
